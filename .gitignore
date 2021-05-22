@@ -1,2 +1,6 @@
 node_modules
-keys
+keys/
+build/
+.env
+.DS_Store
+package-lock.json
