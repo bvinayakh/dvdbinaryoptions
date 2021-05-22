@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Derived</title>
+
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
+    <script src="./node_modules/web3/dist/web3.min.js"></script>
+    <script src="./indexb.js"></script>
+  </head>
+
+  <body class="container">
+    <h1 class="page-header">Binary Options</h1>
+
+    <div class="row">
+      <div>
+        <h3 class="sub-header">Price of Ethereum above 4000</h3>
+        <form class="form-inline" role="form">
+          <div class="form-group">
+            <table>
+              <tr>
+                <!--<td><label for="newInfo">Info:</label> </td>-->
+                <td>
+                  <!--<input class="form-control" id="newInfo">-->
+                  <a id="positive" href="#" class="btn btn-primary">Yes</a>
+                  <a id="negative" href="#" class="btn btn-primary">No</a>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <!--<a href="#" onclick="registerSetInfo()" class="btn btn-primary">Set</a>-->
+        </form>
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <h3 class="sub-header">Total Participants</h3>
+        <form class="form-inline" role="form">
+          <a id="total" href="#" class="btn btn-primary">Total Participants</a>
+          <div class="form-group">
+            <table>
+              <tr>
+                <!--<td>Info:</td>-->
+                <td>
+                  <label id="totalparticipants">
+                </td>
+              </tr>
+            </table>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script>
+      $("#total").click(function(){alert("click")})
+    </script>
+  </body>
+</html>
