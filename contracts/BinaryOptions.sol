@@ -5,7 +5,7 @@ pragma solidity ^0.6.0;
 import "./Pausable.sol";
 import "./Oracle.sol";
 
-contract BinaryOptions is Owner, Pausable, OracleClient {
+contract BinaryOptions is Owner, Pausable, Oracle {
     uint256 totalCount;
     uint256 positiveCount;
     uint256 negativeCount;
