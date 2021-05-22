@@ -2,10 +2,7 @@
 
 pragma solidity ^0.6.0;
 
-// import "github.com/smartcontractkit/chainlink/evm-contracts/src/v0.6/ChainlinkClient.sol";
-
 import "@chainlink/contracts/src/v0.6/ChainlinkClient.sol";
-
 import "./Owner.sol";
 
 contract Oracle is ChainlinkClient, Owner {
