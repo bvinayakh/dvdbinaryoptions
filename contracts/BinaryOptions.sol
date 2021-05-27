@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0
 
-pragma solidity ^0.6.0;
+pragma solidity >=0.6.0 <0.8.0;
 
 import "./Pausable.sol";
 import "./Oracle.sol";
@@ -94,11 +94,6 @@ contract BinaryOptions is Owner, Pausable, Oracle {
 
     function getTotal() public view returns (uint256) {
         return totalCount;
-    }
-
-    function getCurrentDateTime() public view returns (string memory) {
-        DateTime._DateTime memory dt = parseTimestamp(block.timestamp);
-        return dt.hour;
     }
 
     receive() external payable {}
