@@ -4,6 +4,7 @@ pragma solidity >=0.6.0 <0.8.0;
 
 import "./Pausable.sol";
 import "./Oracle.sol";
+import "./interfaces/IBinaryOptions.sol";
 
 contract BinaryOptions is Owner, Pausable, Oracle {
     uint256 totalCount;
@@ -11,15 +12,33 @@ contract BinaryOptions is Owner, Pausable, Oracle {
     uint256 negativeCount;
     //1 ticket is always 1 xUSD
     uint256 minTicket = 1;
+    uint256 criteria;
 
-    uint256 public criteria;
+    //will be init during contract creation/deployment
+    //will determine when this contract will expire
+    uint256 contractExpiryTime;
+    uint256 bidPeriodTime;
 
     string public constant tokenName = "DVD Binary Options";
     string public constant tokenSymbol = "xUSD";
 
-    constructor() public {}
+    constructor(
+        uint256 _contractExpiryTime,
+        uint256 _criteria,
+        uint256 _bidPeriod
+    ) public {
+        contractExpiryTime = _contractExpiryTime;
+        criteria = _criteria;
+        bidPeriodTime = _bidPeriod;
+    }
 
     event logString(string message);
+    event announce(
+        string message1,
+        uint256 currentTime,
+        string message2,
+        uint256 expiryTime
+    );
     event logUint(uint256 value);
 
     struct Participant {
@@ -33,7 +52,8 @@ contract BinaryOptions is Owner, Pausable, Oracle {
     mapping(address => bool) voted;
 
     function votePositive(address participant) public payable isContractPaused {
-        // require(!voted[participant], "You have voted already");
+        //if current time is lesser than the bidding time limit then allow voting
+        require(now < bidPeriodTime, "Bidding Period has ended");
         require(msg.value >= 1000, "Need 1000 wei to bid");
         totalCount++;
         // lets assume every vote is 1000 wei
@@ -43,7 +63,8 @@ contract BinaryOptions is Owner, Pausable, Oracle {
     }
 
     function voteNegative(address participant) public payable isContractPaused {
-        // require(!voted[participant], "You have voted already");
+        //if current time is lesser than the bidding time limit then allow voting
+        require(now < bidPeriodTime, "Bidding Period has ended");
         require(msg.value >= 1000, "Need 1000 wei to bid");
         totalCount++;
         // assume every vote is 1000 wei
@@ -52,13 +73,17 @@ contract BinaryOptions is Owner, Pausable, Oracle {
         negativeCount++;
     }
 
-    // function announceResult(uint256 result) public ownerOnly view returns(uint256)
-    // function will be triggered automatically by time oracle
     function announceResult() public ownerOnly isContractPaused {
-        //connect to time oracle and trigger requestEthereumPrice on set time
         //invoke oracle and get ETH price
         //eth price - lets assume options bid is for eth > 4000
-        // if(result == 1)
+        //if current time is more than the end time specified during contract creation then allow announce result
+        emit announce(
+            "Announcing Result at ",
+            now,
+            " option expiry time marked as ",
+            contractExpiryTime
+        );
+        require(now >= contractExpiryTime, "Option Not Expired");
         emit logUint(currentPrice);
         if (currentPrice > criteria) {
             //positive won
@@ -80,25 +105,33 @@ contract BinaryOptions is Owner, Pausable, Oracle {
         //clear mappings
     }
 
-    function getContractBalance() public view returns (uint256) {
+    function getContractBalance() external view returns (uint256) {
         return address(this).balance;
     }
 
-    function getPositive() public view returns (uint256) {
+    function getPositive() external view returns (uint256) {
         return positiveCount;
     }
 
-    function getNegative() public view returns (uint256) {
+    function getNegative() external view returns (uint256) {
         return negativeCount;
     }
 
-    function getTotal() public view returns (uint256) {
+    function getTotal() external view returns (uint256) {
         return totalCount;
     }
 
-    receive() external payable {}
-
-    function setCriteria(uint256 _criteria) public ownerOnly isContractPaused {
-        criteria = _criteria;
+    function getContractExpiry() external view returns (uint256) {
+        return contractExpiryTime;
     }
+
+    function getCriteria() external view returns (uint256) {
+        return criteria;
+    }
+
+    function getBidPeriodLimit() external view returns (uint256) {
+        return bidPeriodTime;
+    }
+
+    receive() external payable {}
 }

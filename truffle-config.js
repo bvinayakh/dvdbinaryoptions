@@ -67,12 +67,13 @@ module.exports = {
     // skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
     // },
     kovan: {
-      provider: () =>
-        new HDWalletProvider(
-          "lucky solve start until elite tag asset cage deliver correct flat muffin",
-          `https://kovan.infura.io/v3/f8efd6941c7046f1a327d161d0072504`
-        ),
+      provider: function () {
+        HDWalletProvider = require("truffle-hdwallet-provider");
+        // return new HDWalletProvider(process.env.MNEMONIC, process.env.RPC_URL);
+        return new HDWalletProvider(process.env.privkey, process.env.RPC_URL);
+      },
       network_id: 42, // Ropsten's id
+      from: "0x0CcA67351d8384800836B937Ad61C4Ac853b744C",
       gas: 5500000, // Ropsten has a lower block limit than mainnet
       confirmations: 2, // # of confs to wait between deployments. (default: 0)
       timeoutBlocks: 200, // # of blocks before a deployment times out  (minimum/default: 50)
